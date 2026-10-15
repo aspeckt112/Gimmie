@@ -1,0 +1,11 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackagesCentrally>true</ManagePackagesCentrally>
+        <!-- SDK 10.0.402 gates CPM on the legacy name; set both so restore works here and on standard SDKs -->
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageVersion Include="ConsoleAppFramework" Version="5.7.13" />
+    </ItemGroup>
+</Project>

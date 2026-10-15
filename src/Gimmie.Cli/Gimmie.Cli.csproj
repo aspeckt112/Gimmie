@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <PublishAot>true</PublishAot>
+    <IsAotCompatible>true</IsAotCompatible>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ConsoleAppFramework" />
+    <ProjectReference Include="..\Gimmie.Core\Gimmie.Core.csproj" />
+    <ProjectReference Include="..\Gimmie.Platform.Windows\Gimmie.Platform.Windows.csproj" />
+    <ProjectReference Include="..\Gimmie.Platform.MacOS\Gimmie.Platform.MacOS.csproj" />
+    <ProjectReference Include="..\Gimmie.Platform.Linux\Gimmie.Platform.Linux.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Gimmie.Core/Gimmie.Core.csproj" />
+    <Project Path="src/Gimmie.Cli/Gimmie.Cli.csproj" />
+    <Project Path="src/Gimmie.Platform.Windows/Gimmie.Platform.Windows.csproj" />
+    <Project Path="src/Gimmie.Platform.MacOS/Gimmie.Platform.MacOS.csproj" />
+    <Project Path="src/Gimmie.Platform.Linux/Gimmie.Platform.Linux.csproj" />
+  </Folder>
+</Solution>
