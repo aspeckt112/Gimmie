@@ -6,4 +6,7 @@
     <Project Path="src/Gimmie.Platform.MacOS/Gimmie.Platform.MacOS.csproj" />
     <Project Path="src/Gimmie.Platform.Linux/Gimmie.Platform.Linux.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Gimmie.Cli.IntegrationTests/Gimmie.Cli.IntegrationTests.csproj" />
+  </Folder>
 </Solution>

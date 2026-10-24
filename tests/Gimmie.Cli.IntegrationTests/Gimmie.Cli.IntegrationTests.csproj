@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CliWrap" />
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Xunit.Assert" Static="true" />
+    <Using Include="Gimmie.Cli.IntegrationTests.Infrastructure" />
+  </ItemGroup>
+
+  <!-- Build the CLI first, but do not reference its assembly. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Gimmie.Cli\Gimmie.Cli.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!--
+    Expose the CLI's real build output path to the tests as assembly metadata.
+    GetTargetPath resolves the same path the build produces (honoring Configuration
+    and OutputPath) without copying the CLI into the test output directory.
+  -->
+  <Target Name="InjectCliPath" BeforeTargets="GetAssemblyAttributes">
+    <MSBuild Projects="$(MSBuildProjectDirectory)/../../src/Gimmie.Cli/Gimmie.Cli.csproj"
+             Targets="GetTargetPath">
+      <Output TaskParameter="TargetOutputs" PropertyName="GimmieCliPath" />
+    </MSBuild>
+    <ItemGroup>
+      <AssemblyMetadata Include="GimmieCliPath" Value="$(GimmieCliPath)" />
+    </ItemGroup>
+  </Target>
+
+</Project>
