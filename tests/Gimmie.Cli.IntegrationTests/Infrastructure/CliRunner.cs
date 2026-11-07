@@ -12,12 +12,17 @@ internal static class CliRunner
 {
     private static readonly string CliDll = CliDllPath.Resolve();
 
-    public static async Task<CliResult> RunAsync(params string[] args)
+    public static Task<CliResult> RunAsync(params string[] args) => RunWithEnvironmentAsync(new Dictionary<string, string?>(), args);
+
+    // Per-process environment overrides allow fake clipboard tools without changing the desktop clipboard.
+    public static async Task<CliResult> RunWithEnvironmentAsync(
+        IReadOnlyDictionary<string, string?> environment, params string[] args)
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
         BufferedCommandResult result = await CliFactory.Wrap("dotnet")
             .WithArguments([CliDll, .. args])
+            .WithEnvironmentVariables(environment)
             .WithValidation(CommandResultValidation.None)
             .ExecuteBufferedAsync(timeout.Token);
 

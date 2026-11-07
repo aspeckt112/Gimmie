@@ -1,2 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Gimmie.Core\Gimmie.Core.csproj" />
+  </ItemGroup>
 </Project>

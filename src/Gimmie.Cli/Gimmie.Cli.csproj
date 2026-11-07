@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConsoleAppFramework" />
+    <InternalsVisibleTo Include="Gimmie.Cli.IntegrationTests" />
+    <PackageReference Include="ConsoleAppFramework" PrivateAssets="all" />
     <ProjectReference Include="..\Gimmie.Core\Gimmie.Core.csproj" />
     <ProjectReference Include="..\Gimmie.Platform.Windows\Gimmie.Platform.Windows.csproj" />
     <ProjectReference Include="..\Gimmie.Platform.MacOS\Gimmie.Platform.MacOS.csproj" />
