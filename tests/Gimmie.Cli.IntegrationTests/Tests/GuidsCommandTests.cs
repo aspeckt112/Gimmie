@@ -39,6 +39,7 @@ public sealed class GuidsCommandTests
 
         Equal(0, result.ExitCode);
         Matches(GuidPatterns.Sequence(3, ","), result.StdOut);
+        EndsWith("\n", result.StdOut);
     }
 
     [Fact]

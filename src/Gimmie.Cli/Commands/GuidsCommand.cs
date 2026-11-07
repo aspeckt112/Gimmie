@@ -21,18 +21,41 @@ internal static class GuidsCommand
         }
 
         char sep = separator ?? '\n';
-        var response = new StringBuilder();
+        var options = (ResponseOptions)context.GlobalOptions!;
+        StringBuilder? response = options.Copy ? new StringBuilder() : null;
 
         for (int i = 0; i < number; i++)
         {
             if (i > 0)
             {
-                _ = response.Append(sep);
+                if (response is null)
+                {
+                    Console.Out.Write(sep);
+                }
+                else
+                {
+                    _ = response.Append(sep);
+                }
             }
 
-            _ = response.Append(GuidFactory.New(upper));
+            string guid = GuidFactory.New(upper);
+            if (response is null)
+            {
+                Console.Out.Write(guid);
+            }
+            else
+            {
+                _ = response.Append(guid);
+            }
         }
 
-        context.WriteResponse(response.ToString());
+        if (response is null)
+        {
+            Console.Out.WriteLine();
+        }
+        else
+        {
+            context.WriteResponse(response.ToString());
+        }
     }
 }

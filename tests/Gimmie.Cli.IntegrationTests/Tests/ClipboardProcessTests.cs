@@ -45,6 +45,35 @@ public sealed class ClipboardProcessTests
     }
 
     [Fact]
+    public async Task Process_EarlyToolExit_ReportsExitCodeAndDiagnostic()
+    {
+        SkipWhen(OperatingSystem.IsWindows(), "This fake clipboard tool uses a POSIX shell.");
+        string text = new('x', 1024 * 1024);
+
+        IOException error = await ThrowsAsync<IOException>(() => ClipboardProcess.CopyAsync(
+            "/bin/sh",
+            ["-c", "exec 0<&-; printf 'clipboard unavailable' >&2; exit 7"],
+            text,
+            TestContext.Current.CancellationToken));
+
+        Contains("exit 7", error.Message);
+        Contains("clipboard unavailable", error.Message);
+    }
+
+    [Fact]
+    public async Task Process_EarlySuccessfulToolExit_ReportsInputFailure()
+    {
+        SkipWhen(OperatingSystem.IsWindows(), "This fake clipboard tool uses a POSIX shell.");
+        string text = new('x', 1024 * 1024);
+
+        _ = await ThrowsAsync<IOException>(() => ClipboardProcess.CopyAsync(
+            "/bin/sh",
+            ["-c", "exec 0<&-; exit 0"],
+            text,
+            TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
     public async Task Process_MissingTool_FailsWithoutReportingSuccess()
     {
         string path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());

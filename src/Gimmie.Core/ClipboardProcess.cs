@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Text;
 
 namespace Gimmie.Core;
@@ -42,11 +43,20 @@ public static class ClipboardProcess
 
         Task error = DrainAsync(process.StandardError, diagnostic, timeout.Token);
         Task output = DrainAsync(process.StandardOutput, null, timeout.Token);
+        ExceptionDispatchInfo? inputFailure = null;
 
         try
         {
-            await process.StandardInput.WriteAsync(text.AsMemory(), timeout.Token);
-            process.StandardInput.Close();
+            try
+            {
+                await process.StandardInput.WriteAsync(text.AsMemory(), timeout.Token);
+                process.StandardInput.Close();
+            }
+            catch (IOException exception)
+            {
+                inputFailure = ExceptionDispatchInfo.Capture(exception);
+            }
+
             await process.WaitForExitAsync(timeout.Token);
         }
         catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
@@ -71,6 +81,8 @@ public static class ClipboardProcess
         {
             throw new IOException($"{executable} failed (exit {process.ExitCode}): {diagnostic.ToString().Trim()}");
         }
+
+        inputFailure?.Throw();
     }
 
     // Drain helper output without exposing it on the command's stdout.
