@@ -2,6 +2,64 @@ namespace Gimmie.Cli.IntegrationTests.Tests;
 
 public sealed class CliSurfaceTests
 {
+    [Theory]
+    [InlineData("guid")]
+    [InlineData("guids")]
+    public async Task Help_Command_DescribesGlobalCopyOption(string command)
+    {
+        CliResult result = await CliRunner.RunAsync(command, "--help");
+
+        Equal(0, result.ExitCode);
+        Contains("--copy", result.StdOut);
+        Contains("clipboard", result.StdOut);
+    }
+
+    [Theory]
+    [InlineData("--copy", "guids", "-n", "0")]
+    [InlineData("guids", "--copy", "-n", "0")]
+    public async Task Copy_EmptyResponse_AcceptsFlagInEitherPositionWithoutClipboardAccess(params string[] args)
+    {
+        CliResult result = await CliRunner.RunAsync(args);
+
+        Equal(0, result.ExitCode);
+        Empty(result.StdOut);
+        Empty(result.StdErr);
+    }
+
+    [Theory]
+    [InlineData("guid", "--copy", "--help")]
+    [InlineData("--copy", "guid", "--help")]
+    [InlineData("--copy", "--version")]
+    public async Task Copy_HelpOrVersion_DoesNotAccessClipboard(params string[] args)
+    {
+        CliResult result = await CliRunner.RunAsync(args);
+
+        Equal(0, result.ExitCode);
+        NotEmpty(result.StdOut);
+        Empty(result.StdErr);
+    }
+
+    [Fact]
+    public async Task Copy_InvalidCommandOptions_PreservesExistingDiagnosticBehavior()
+    {
+        CliResult result = await CliRunner.RunAsync("guids", "--copy", "-n", "abc");
+
+        Equal(1, result.ExitCode);
+        NotEmpty(result.StdOut);
+        Empty(result.StdErr);
+        DoesNotContain("Clipboard copy failed", result.StdOut);
+    }
+
+    [Fact]
+    public async Task Copy_EscapedFlag_DoesNotAccessClipboard()
+    {
+        CliResult result = await CliRunner.RunAsync("guid", "--", "--copy");
+
+        Equal(0, result.ExitCode);
+        Matches(GuidPatterns.Single(), Single(result.StdOutLines));
+        Empty(result.StdErr);
+    }
+
     [Fact]
     public async Task Help_NoArguments_ListsCommandsAndExitsZero()
     {

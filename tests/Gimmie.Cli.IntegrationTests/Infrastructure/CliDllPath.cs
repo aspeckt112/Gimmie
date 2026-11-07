@@ -18,13 +18,10 @@ internal static class CliDllPath
                 "Assembly metadata 'GimmieCliPath' was not found. Build the test project before running it.");
         }
 
-        if (!File.Exists(path))
-        {
-            throw new FileNotFoundException(
+        return !File.Exists(path)
+            ? throw new FileNotFoundException(
                 $"The Gimmie.Cli build output was not found at '{path}'. Build the Gimmie.Cli project first.",
-                path);
-        }
-
-        return path;
+                path)
+            : path;
     }
 }

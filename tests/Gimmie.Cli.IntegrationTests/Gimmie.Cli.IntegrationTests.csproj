@@ -16,9 +16,9 @@
     <Using Include="Gimmie.Cli.IntegrationTests.Infrastructure" />
   </ItemGroup>
 
-  <!-- Build the CLI first, but do not reference its assembly. -->
+  <!-- Reference the response module while still launching the real CLI for integration tests. -->
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Gimmie.Cli\Gimmie.Cli.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\src\Gimmie.Cli\Gimmie.Cli.csproj" />
   </ItemGroup>
 
   <!--
