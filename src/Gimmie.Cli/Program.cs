@@ -16,5 +16,6 @@ app.UseFilter<ResponseFilter>();
 
 app.Add("guid", GuidCommand.Run);
 app.Add("guids", GuidsCommand.Run);
+app.Add("password", PasswordCommand.Run);
 
 await app.RunAsync(CopyArguments.Normalize(args));
