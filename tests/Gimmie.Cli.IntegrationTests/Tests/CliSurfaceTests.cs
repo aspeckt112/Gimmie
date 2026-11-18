@@ -5,6 +5,7 @@ public sealed class CliSurfaceTests
     [Theory]
     [InlineData("guid")]
     [InlineData("guids")]
+    [InlineData("password")]
     public async Task Help_Command_DescribesGlobalCopyOption(string command)
     {
         CliResult result = await CliRunner.RunAsync(command, "--help");
@@ -69,6 +70,7 @@ public sealed class CliSurfaceTests
         Contains("Usage:", result.StdOut);
         Contains("guid", result.StdOut);
         Contains("guids", result.StdOut);
+        Contains("password", result.StdOut);
     }
 
     [Fact]
