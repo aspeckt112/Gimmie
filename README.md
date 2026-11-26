@@ -1,5 +1,35 @@
 # Gimmie
 
+## Generate a random integer or choice
+
+```sh
+gimmie random integer
+gimmie random integer --min -10 --max 10
+gimmie random choice red green blue
+printf 'red\ngreen\nblue\n' | gimmie random choice
+gimmie random choice -- --copy
+gimmie random integer --copy
+```
+
+`random integer` generates one integer using cryptographically secure, unbiased
+randomness. Bounds are inclusive signed 32-bit integers; `--min` defaults to 0
+and `--max` defaults to 100. Equal bounds return that value. Invalid bounds or
+a minimum greater than the maximum produce an error and a nonzero exit code.
+
+`random choice` selects one entry using the same secure, unbiased randomness.
+Pass separate positional arguments or redirect newline-separated input. If any
+positional arguments are supplied, they take precedence over stdin, even if all
+are empty. Empty arguments and lines are ignored; whitespace in nonempty entries
+is preserved, and repeated entries are separate choices. An empty list produces
+an error and a nonzero exit code. Use `--` before entries that must not be parsed
+as options, such as a literal `--copy`.
+
+Both commands print the result followed by a display newline. Clipboard copying
+is off by default; global `--copy` explicitly copies the result without the
+display newline. Run `gimmie random integer --help` or
+`gimmie random choice --help` for command help. Run `gimmie random --help`
+to list the available random commands.
+
 ## Generate a password
 
 ```sh

@@ -14,17 +14,30 @@ internal static class CliRunner
 
     public static Task<CliResult> RunAsync(params string[] args) => RunWithEnvironmentAsync(new Dictionary<string, string?>(), args);
 
+    public static Task<CliResult> RunWithInputAsync(string input, params string[] args) =>
+        RunCoreAsync(new Dictionary<string, string?>(), input, args);
+
     // Per-process environment overrides allow fake clipboard tools without changing the desktop clipboard.
-    public static async Task<CliResult> RunWithEnvironmentAsync(
-        IReadOnlyDictionary<string, string?> environment, params string[] args)
+    public static Task<CliResult> RunWithEnvironmentAsync(
+        IReadOnlyDictionary<string, string?> environment, params string[] args) =>
+        RunCoreAsync(environment, null, args);
+
+    private static async Task<CliResult> RunCoreAsync(
+        IReadOnlyDictionary<string, string?> environment, string? input, string[] args)
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
 
-        BufferedCommandResult result = await CliFactory.Wrap("dotnet")
+        Command command = CliFactory.Wrap("dotnet")
             .WithArguments([CliDll, .. args])
             .WithEnvironmentVariables(environment)
-            .WithValidation(CommandResultValidation.None)
-            .ExecuteBufferedAsync(timeout.Token);
+            .WithValidation(CommandResultValidation.None);
+
+        if (input is not null)
+        {
+            command = command.WithStandardInputPipe(PipeSource.FromString(input));
+        }
+
+        BufferedCommandResult result = await command.ExecuteBufferedAsync(timeout.Token);
 
         return new CliResult(
             result.ExitCode,
