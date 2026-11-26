@@ -71,6 +71,8 @@ public sealed class CliSurfaceTests
         Contains("guid", result.StdOut);
         Contains("guids", result.StdOut);
         Contains("password", result.StdOut);
+        Contains("random integer", result.StdOut);
+        Contains("random choice", result.StdOut);
     }
 
     [Fact]

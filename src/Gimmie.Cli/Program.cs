@@ -17,5 +17,13 @@ app.UseFilter<ResponseFilter>();
 app.Add("guid", GuidCommand.Run);
 app.Add("guids", GuidsCommand.Run);
 app.Add("password", PasswordCommand.Run);
+app.Add("random", RandomCommand.Run);
+app.Add("random integer", RandomIntegerCommand.Run);
+app.Add("random choice", RandomChoiceCommand.Run);
 
-await app.RunAsync(CopyArguments.Normalize(args));
+string[] arguments = CopyArguments.Normalize(args);
+
+if (!RandomCommand.TryShowHelp(arguments))
+{
+    await app.RunAsync(arguments);
+}
